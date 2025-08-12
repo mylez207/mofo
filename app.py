@@ -1,0 +1,26 @@
+import streamlit as st
+import pandas as pd
+import pickle
+
+# Load the trained model
+with open("best_model.pkl", "rb") as file:
+    model = pickle.load(file)
+
+st.title("🏠 House Price Prediction App")
+st.write("This app predicts house prices based on input features.")
+
+# Example input fields (adjust according to your dataset)
+square_feet = st.number_input("Square Feet", min_value=500, max_value=10000, value=2000)
+num_bedrooms = st.number_input("Number of Bedrooms", min_value=1, max_value=10, value=3)
+num_bathrooms = st.number_input("Number of Bathrooms", min_value=1, max_value=10, value=2)
+
+if st.button("Predict Price"):
+    # Create a DataFrame with one row
+    input_data = pd.DataFrame({
+        "square_feet": [square_feet],
+        "num_bedrooms": [num_bedrooms],
+        "num_bathrooms": [num_bathrooms]
+    })
+    
+    prediction = model.predict(input_data)
+    st.success(f"Estimated House Price: ${prediction[0]:,.2f}")
